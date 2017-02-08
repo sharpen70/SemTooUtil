@@ -27,7 +27,7 @@ public class CSVTransform {
 		for(int i = 0; i < args.length; i++) {
 			if(args[i].equals("-f")) abox_file = args[++i];
 			if(args[i].equals("-o")) out_path = args[++i];
-			if(args[i].equals("-nh")) with_header = false;
+//			if(args[i].equals("-nh")) with_header = false;
 			if(args[i].equals("-d")) {
 				abox_dir = args[++i]; 
 				if(!new File(abox_dir).isDirectory()) throw new Exception("Provided path is not a directory");

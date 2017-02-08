@@ -237,13 +237,13 @@ public class GraphManager {
 		end = System.currentTimeMillis();
 		System.out.println("Done with " + (end - start) + " ms");
 		
-//		System.out.println("Inserting nodes with Abox axioms ...");
-//		start = System.currentTimeMillis();
-//		try(Transaction tc = session.beginTransaction()) {	
-//			o.axioms().filter(new DLliteFilter("R")).forEach(a -> a.accept(new aboxAxiomVistor(tc)));
-//		}
-//		end = System.currentTimeMillis();
-//		System.out.println("Done with " + (end - start) + " ms");
+		System.out.println("Inserting nodes with Abox axioms ...");
+		start = System.currentTimeMillis();
+		try(Transaction tc = session.beginTransaction()) {	
+			o.axioms().filter(new DLliteFilter("R")).forEach(a -> a.accept(new aboxAxiomVistor(tc)));
+		}
+		end = System.currentTimeMillis();
+		System.out.println("Done with " + (end - start) + " ms");
 		
 		session.close();
 	}
