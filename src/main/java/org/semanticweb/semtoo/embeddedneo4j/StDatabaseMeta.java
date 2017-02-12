@@ -3,7 +3,7 @@ package org.semanticweb.semtoo.embeddedneo4j;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
 
-public class SemtooDatabaseMeta {
+public class StDatabaseMeta {
 	public static class node_labels {
 		public static final Label TBOXENTITY = Label.label("TBEN");
 		public static final Label CLASS = Label.label("CLS");
@@ -23,6 +23,10 @@ public class SemtooDatabaseMeta {
 		public static final String SUBJECT_IRI = "subiri";
 		public static final String OBJECT_IRI = "objiri";
 		public static final String IRI_LOWER = "iri_lower";
+		public static final String SUBJECT_ID = "subid";
+		public static final String OBJECT_ID = "objid";
+		
+		public static final String CAUSES = "causes";
 	}
 	
 	public static enum RelType implements RelationshipType { SubOf, is }

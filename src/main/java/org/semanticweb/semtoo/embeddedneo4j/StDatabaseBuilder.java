@@ -12,45 +12,49 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.neo4j.graphdb.schema.Schema;
-import org.semanticweb.semtoo.embeddedneo4j.SemtooDatabaseMeta.RelType;
-import org.semanticweb.semtoo.embeddedneo4j.SemtooDatabaseMeta.node_labels;
-import org.semanticweb.semtoo.embeddedneo4j.SemtooDatabaseMeta.property_key;
+import org.semanticweb.semtoo.embeddedneo4j.StDatabaseMeta.RelType;
+import org.semanticweb.semtoo.embeddedneo4j.StDatabaseMeta.node_labels;
+import org.semanticweb.semtoo.embeddedneo4j.StDatabaseMeta.property_key;
 import org.semanticweb.semtoo.util.Helper;
 
-public class SemtooDatabase {
+public class StDatabaseBuilder {
 	private GraphDatabaseService graphdb;
 	
 	public static final String NEG_PREFIX = "neg_";
 	public static final String INV_PREFIX = "inv_";
 	public static final String PRT_PREFIX = "prt_";
 	
-	private static Map<String, SemtooDatabase> databases = new HashMap<>();
+	private static Map<String, StDatabaseBuilder> databases = new HashMap<>();
 	
-	private SemtooDatabase(String pathtoDB) {
-	//	graphdb = new GraphDatabaseFactory().newEmbeddedDatabase(new File(pathtoDB));
-		graphdb = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(new File(pathtoDB))
-											.setConfig(GraphDatabaseSettings.pagecache_memory, "6g").newGraphDatabase();
-		registerShutDownHook(graphdb);
+	public StDatabaseBuilder(GraphDatabaseService db) {
+		graphdb = db;
 	}
 	
-	public static synchronized SemtooDatabase getDatabase(String pathtoDB, boolean clean) {
-		if(clean) {
-			File _db = new File(pathtoDB);
-			if(_db.exists()) {
-				System.out.println("Clean the original database ...");
-				Helper.recusiveDelete(_db);
-				databases.remove(pathtoDB);
-			}
-		}
-			
-		SemtooDatabase db = databases.get(pathtoDB);
-		if(db == null) {
-			db = new SemtooDatabase(pathtoDB);
-			if(clean) db.initialize();
-			databases.put(pathtoDB, db);
-		}
-		return db;
-	}
+//	private StDatabaseBuilder(String pathtoDB) {
+//	//	graphdb = new GraphDatabaseFactory().newEmbeddedDatabase(new File(pathtoDB));
+//		graphdb = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(new File(pathtoDB))
+//											.setConfig(GraphDatabaseSettings.pagecache_memory, "6g").newGraphDatabase();
+//		registerShutDownHook(graphdb);
+//	}
+//	
+//	public static synchronized StDatabaseBuilder getDatabase(String pathtoDB, boolean clean) {
+//		if(clean) {
+//			File _db = new File(pathtoDB);
+//			if(_db.exists()) {
+//				System.out.println("Clean the original database ...");
+//				Helper.recusiveDelete(_db);
+//				databases.remove(pathtoDB);
+//			}
+//		}
+//			
+//		StDatabaseBuilder db = databases.get(pathtoDB);
+//		if(db == null) {
+//			db = new StDatabaseBuilder(pathtoDB);
+//			if(clean) db.initialize();
+//			databases.put(pathtoDB, db);
+//		}
+//		return db;
+//	}
 	
 	public void initialize() {
 		createNodeIndex();
@@ -251,12 +255,16 @@ public class SemtooDatabase {
 			String index3 = "CREATE INDEX ON :TBEN(iri)";
 			String index4 = "CREATE INDEX ON :TBEN(iri_lower)";
 			String index5 = "CREATE INDEX ON :NEG(iri)";
+//			String index6 = "CREATE INDEX ON :DUAL(" + property_key.OBJECT_ID + ")";
+//			String index7 = "CREATE INDEX ON :DUAL(" + property_key.SUBJECT_ID + ")";
 			
 			graphdb.execute(index1);
 			graphdb.execute(index2);
 			graphdb.execute(index3);
 			graphdb.execute(index4);
 			graphdb.execute(index5);
+//			graphdb.execute(index6);
+//			graphdb.execute(index7);
 	
 			tx.success();
 		}

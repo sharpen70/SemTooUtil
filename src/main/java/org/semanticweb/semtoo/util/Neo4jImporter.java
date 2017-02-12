@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.commons.io.FileUtils;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.semtoo.embeddedneo4j.SemtooDatabase;
+import org.semanticweb.semtoo.embeddedneo4j.StDatabaseBuilder;
 import org.semanticweb.semtoo.imports.CSVImporter;
 import org.semanticweb.semtoo.imports.OWLTransfer;
 
@@ -44,9 +48,16 @@ public class Neo4jImporter {
 			OWLOntologyManager man = OWLManager.createOWLOntologyManager();
 			OWLOntology o = man.loadOntologyFromOntologyDocument(onto);
 			
-			SemtooDatabase db = SemtooDatabase.getDatabase(db_loc, true);
+			File _db = new File(db_loc);
+			if(_db.exists()) {
+				System.out.println("Clean the original database ...");
+				FileUtils.deleteDirectory(_db);
+			}
 			
-			OWLTransfer owltf = new OWLTransfer(o, db);
+			GraphDatabaseService dbservice = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(new File(db_loc))
+					.setConfig(GraphDatabaseSettings.pagecache_memory, "6g").newGraphDatabase();
+			
+			OWLTransfer owltf = new OWLTransfer(o, dbservice);
 			owltf.loadOntologyToGraph();
 		}
 		else {
@@ -55,8 +66,10 @@ public class Neo4jImporter {
 				return;
 			}
 			
-			SemtooDatabase db = SemtooDatabase.getDatabase(db_loc, false);
-			CSVImporter importer = new CSVImporter(db);
+			GraphDatabaseService dbservice = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(new File(db_loc))
+					.setConfig(GraphDatabaseSettings.pagecache_memory, "6g").newGraphDatabase();
+			
+			CSVImporter importer = new CSVImporter(dbservice);
 			
 			for(String s: csvs) {
 				File f = new File(s);
