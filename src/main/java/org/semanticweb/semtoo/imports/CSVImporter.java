@@ -16,7 +16,7 @@ public class CSVImporter {
 	}
 	
 	public void import_classAssertion_csv(String clsAssertioncsv) throws IOException {
-		clsAssertioncsv = new File(clsAssertioncsv).getCanonicalPath().replace("\\\\", "/");
+		clsAssertioncsv = new File(clsAssertioncsv).getCanonicalPath().replaceAll("\\\\", "/");
 		
 		String cypher1 = "USING PERIODIC COMMIT 1000"
 				+ " LOAD CSV WITH HEADERS FROM \"file:///" + clsAssertioncsv + "\" AS clsa"
@@ -34,28 +34,28 @@ public class CSVImporter {
 	}
 	
 	public void import_propertyAssertion_csv(String pptAssertincsv) throws IOException {
-		pptAssertincsv = new File(pptAssertincsv).getCanonicalPath().replace("\\\\", "/");
+		pptAssertincsv = new File(pptAssertincsv).getCanonicalPath().replaceAll("\\\\", "/");
 		
-//		String cypher2 = "USING PERIODIC COMMIT 2000"
-//				+ " LOAD CSV WITH HEADERS FROM \"file:///" + pptAssertincsv + "\" AS ppta"
-//				+ " MERGE (a:" + node_labels.INDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.subject})"
-//				+ " MERGE (ab:" + node_labels.DUALINDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.subject + ppta.object})"
-//				+ " ON CREATE SET ab." + property_key.SUBJECT_IRI + "=ppta.subject, ab." + property_key.OBJECT_IRI + "=ppta.object";
-//		
-//		String cypher2_1 = "USING PERIODIC COMMIT 2000"
-//				+ " LOAD CSV WITH HEADERS FROM \"file:///" + pptAssertincsv + "\" AS ppta"
-//				+ " MERGE (b:" + node_labels.INDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.object})"
-//				+ " MERGE (ba:" + node_labels.DUALINDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.object + ppta.subject})"
-//				+ " ON CREATE SET ba." + property_key.SUBJECT_IRI + "=ppta.object, ba." + property_key.OBJECT_IRI + "=ppta.subject";
-		
-		String cypher2 = "USING PERIODIC COMMIT 1000"
+		String cypher2 = "USING PERIODIC COMMIT 2000"
 				+ " LOAD CSV WITH HEADERS FROM \"file:///" + pptAssertincsv + "\" AS ppta"
 				+ " MERGE (a:" + node_labels.INDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.subject})"
-				+ " MERGE (b:" + node_labels.INDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.object})"				
-				+ " MERGE (ab:" + node_labels.DUALINDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.subject + ppta.object})"
-//				+ " ON CREATE SET ab." + property_key.SUBJECT_ID + "= id(a), ab." + property_key.OBJECT_ID + "= id(b)"
+				+ " MERGE (ab:" + node_labels.DUALINDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.subject + ppta.object})";
+//				+ " ON CREATE SET ab." + property_key.SUBJECT_IRI + "=ppta.subject, ab." + property_key.OBJECT_IRI + "=ppta.object";
+		
+		String cypher2_1 = "USING PERIODIC COMMIT 2000"
+				+ " LOAD CSV WITH HEADERS FROM \"file:///" + pptAssertincsv + "\" AS ppta"
+				+ " MERGE (b:" + node_labels.INDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.object})"
 				+ " MERGE (ba:" + node_labels.DUALINDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.object + ppta.subject})";
-//				+ " ON CREATE SET ba." + property_key.SUBJECT_ID + "= id(b), ba." + property_key.OBJECT_ID + "= id(a)";
+//				+ " ON CREATE SET ba." + property_key.SUBJECT_IRI + "=ppta.object, ba." + property_key.OBJECT_IRI + "=ppta.subject";
+		
+//		String cypher2 = "USING PERIODIC COMMIT 1000"
+//				+ " LOAD CSV WITH HEADERS FROM \"file:///" + pptAssertincsv + "\" AS ppta"
+//				+ " MERGE (a:" + node_labels.INDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.subject})"
+//				+ " MERGE (b:" + node_labels.INDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.object})"				
+//				+ " MERGE (ab:" + node_labels.DUALINDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.subject + ppta.object})"
+////				+ " ON CREATE SET ab." + property_key.SUBJECT_ID + "= id(a), ab." + property_key.OBJECT_ID + "= id(b)"
+//				+ " MERGE (ba:" + node_labels.DUALINDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.object + ppta.subject})";
+////				+ " ON CREATE SET ba." + property_key.SUBJECT_ID + "= id(b), ba." + property_key.OBJECT_ID + "= id(a)";
 		
 		String cypher3 = "USING PERIODIC COMMIT 1000"
 				+ " LOAD CSV WITH HEADERS FROM \"file:///" + pptAssertincsv + "\" AS ppta"
@@ -99,9 +99,9 @@ public class CSVImporter {
 //				+ " MATCH (b:" + node_labels.INDIVIDUAL + " {" + property_key.NODE_IRI + ":ppta.object})"
 //				+ " MERGE (b)-[:is]->(rip)";
 		
-		System.out.println(cypher2);
-		System.out.println(cypher3);
-		System.out.println(cypher3_1);
+//		System.out.println(cypher2);
+//		System.out.println(cypher3);
+//		System.out.println(cypher3_1);
 		long start, end;
 		System.out.println("Begin inserting property assertion ...");
 		start = System.currentTimeMillis();
@@ -111,10 +111,10 @@ public class CSVImporter {
 		end = System.currentTimeMillis();
 		System.out.println("Done cypher2 with " + (end - start) + " ms");
 		
-//		embeddedDB.execute(cypher2_1);
-//		
-//		end = System.currentTimeMillis();
-//		System.out.println("Done cypher2_1 with " + (end - start) + " ms");
+		embeddedDB.execute(cypher2_1);
+		
+		end = System.currentTimeMillis();
+		System.out.println("Done cypher2_1 with " + (end - start) + " ms");
 		
 		embeddedDB.execute(cypher3);
 		

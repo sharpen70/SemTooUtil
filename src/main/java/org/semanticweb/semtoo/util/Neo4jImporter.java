@@ -12,7 +12,6 @@ import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.semtoo.embeddedneo4j.StDatabaseBuilder;
 import org.semanticweb.semtoo.imports.CSVImporter;
 import org.semanticweb.semtoo.imports.OWLTransfer;
 
@@ -59,6 +58,8 @@ public class Neo4jImporter {
 			
 			OWLTransfer owltf = new OWLTransfer(o, dbservice);
 			owltf.loadOntologyToGraph();
+			
+			dbservice.shutdown();
 		}
 		else {
 			if(csvs.size() == 0) {
@@ -81,6 +82,8 @@ public class Neo4jImporter {
 				
 				scanner.close();
 			}
+			
+			dbservice.shutdown();
 		}
 	}
 }
